@@ -1,0 +1,19 @@
+{
+  "name": "com.pluginset.facebook",
+  "displayName": "PluginSet Facebook",
+  "version": "0.0.1",
+  "unity": "2018.4",
+  "description": "Facebook https://developers.facebook.com",
+  "keywords": [
+    "pluginset",
+    "facebook"
+  ],
+  "dependencies": {
+    "com.pluginset.tool.playerservicesresolver": "0.0.1",
+    "com.pluginset.core": "0.0.1"
+  },
+  "author": {
+    "name": "LyenXiao",
+    "email": "lixonxs@icloud.com"
+  }
+}
