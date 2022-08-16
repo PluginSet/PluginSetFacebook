@@ -11,12 +11,12 @@ namespace PluginSet.Facebook
         private static readonly Logger Logger = LoggerManager.GetLogger("Facebook");
         public override string Name => "Facebook";
 
-        public int StartOrder => -10000;
+        public int StartOrder => PluginsStartOrder.SdkDefault;
         public bool IsRunning { get; private set; }
 
-        private PluginFacebookConfig _config;
-
         private bool _inited;
+
+        private PluginFacebookConfig _config;
 
         private static string CheckString(string input, string defaultOutput = null)
         {
@@ -55,7 +55,7 @@ namespace PluginSet.Facebook
         public void DisposePlugin(bool isAppQuit = false)
         {
 #if ENABLE_FACEBOOK_LOGIN
-            if (gameObject.activeInHierarchy)
+            if (!isAppQuit)
                 OnGameRestartLogout();
 #endif
         }

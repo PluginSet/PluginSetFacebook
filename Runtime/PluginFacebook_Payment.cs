@@ -10,8 +10,7 @@ namespace PluginSet.Facebook
     public partial class PluginFacebook: IPaymentPlugin
     {
         public bool IsEnablePayment => _inited;
-        
-        public void Pay(string productId, Action<PaymentResult> callback = null, string jsonData = null)
+        public void Pay(string productId, Action<Result> callback = null, string jsonData = null)
         {
             FB.Canvas.PayWithProductId(productId, "purchaseiap"
                 , null, null
@@ -19,24 +18,27 @@ namespace PluginSet.Facebook
                 {
                     if (callback == null)
                         return;
-                    
-                    var payResult = new PaymentResult();
+
+                    var payResult = new Result();
                     payResult.PluginName = Name;
-                    payResult.ProductId = productId;
+                    payResult.Data = productId;
                     if (result == null)
                     {
                         payResult.Success = false;
                         payResult.Error = "No result";
+                        payResult.Code = PluginConstants.FailDefaultCode;
                     }
                     else if (!string.IsNullOrEmpty(result.Error))
                     {
                         payResult.Success = false;
                         payResult.Error = result.Error;
+                        payResult.Code = PluginConstants.FailDefaultCode;
                     }
                     else if (result.Cancelled)
                     {
                         payResult.Success = false;
                         payResult.Error = "User cancelled";
+                        payResult.Code = PluginConstants.CancelCode;
                     }
                     else if (!string.IsNullOrEmpty(result.RawResult))
                     {
@@ -44,15 +46,18 @@ namespace PluginSet.Facebook
                         if (json != null && json.TryGetValue("status", out var status) && "completed".Equals(status))
                         {
                             payResult.Success = true;
-
-                            if (json.TryGetValue("payment_id", out var paymentId))
-                                payResult.TransactionId = paymentId.ToString();
-                            if (json.TryGetValue("signed_request", out var sign))
-                                payResult.Extra = sign.ToString();
+                            payResult.Code = PluginConstants.SuccessCode;
+                            payResult.Data = result.RawResult;
+//
+//                            if (json.TryGetValue("payment_id", out var paymentId))
+//                                payResult.TransactionId = paymentId.ToString();
+//                            if (json.TryGetValue("signed_request", out var sign))
+//                                payResult.Extra = sign.ToString();
                         }
                         else
                         {
                             payResult.Success = false;
+                            payResult.Code = PluginConstants.FailDefaultCode;
 
                             if (json != null && json.TryGetValue("body", out var body))
                             {
@@ -69,6 +74,7 @@ namespace PluginSet.Facebook
                     else
                     {
                         payResult.Success = false;
+                        payResult.Code = PluginConstants.FailDefaultCode;
                         payResult.Error = "No response";
                     }
                     callback.Invoke(payResult);

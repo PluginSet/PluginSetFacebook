@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using Facebook.Unity;
 using PluginSet.Core;
-using LoginResult = PluginSet.Core.LoginResult;
 
 namespace PluginSet.Facebook
 {
@@ -13,12 +12,16 @@ namespace PluginSet.Facebook
         {
             "publish_actions"
         };
-        
+
+        private readonly List<Action<Result>> _loginCallbacks = new List<Action<Result>>();
+
         public bool IsEnableLogin => _inited;
 
-        private readonly List<Action<LoginResult>> _loginCallbacks = new List<Action<LoginResult>>();
+        public bool IsLoggedIn => !string.IsNullOrEmpty(_loginData);
 
-        public void Login(Action<LoginResult> callback = null)
+        private string _loginData = null;
+        
+        public void Login(Action<Result> callback = null)
         {
             if (callback != null)
                 _loginCallbacks.Add(callback);
@@ -26,7 +29,24 @@ namespace PluginSet.Facebook
             FB.LogInWithPublishPermissions(LoginPermissions, OnFacebookLoginResult);
         }
 
-        private void OnLoginResult(ref LoginResult result)
+        public void Logout(Action<Result> callback = null)
+        {
+            LogoutInternal();
+            
+            callback?.Invoke(new Result
+            {
+                Success = true,
+                PluginName = Name,
+                Code = PluginConstants.SuccessCode,
+            });
+        }
+
+        public string GetUserLoginData()
+        {
+            return _loginData;
+        }
+
+        private void OnLoginResult(ref Result result)
         {
             result.PluginName = Name;
             foreach (var callback in _loginCallbacks)
@@ -36,27 +56,27 @@ namespace PluginSet.Facebook
             _loginCallbacks.Clear();
         }
 
-        private void OnLoginSuccess(string userId, string token, string extra = "")
+        private void OnLoginSuccess(string loginData)
         {
-            var result = new LoginResult
+            _loginData = loginData;
+
+            var result = new Result
             {
                 Success = true,
-                Token = token,
-                Extra = extra,
-                UserInfo = new UserInfo
-                {
-                    UserId = userId
-                }
+                Code = PluginConstants.SuccessCode,
+                Data = _loginData
             };
             OnLoginResult(ref result);
         }
 
-        private void OnLoginFail(string error = "")
+        private void OnLoginFail(int code, string error = "")
         {
-            var result = new LoginResult
+            _loginData = null;
+            var result = new Result
             {
                 Success = false,
-                Error = error
+                Code = code,
+                Error = error,
             };
             OnLoginResult(ref result);
         }
@@ -65,34 +85,42 @@ namespace PluginSet.Facebook
         {
             if (result == null)
             {
-                OnLoginFail();
+                OnLoginFail(PluginConstants.FailDefaultCode);
                 return;
             }
             
             // Some platforms return the empty string instead of null.
             if (!string.IsNullOrEmpty(result.Error))
             {
-                OnLoginFail(result.Error);
+                OnLoginFail(PluginConstants.FailDefaultCode, result.Error);
             }
             else if (result.Cancelled)
             {
-                OnLoginFail(result.RawResult);
+                OnLoginFail(PluginConstants.CancelCode, result.RawResult);
             }
             else if (!string.IsNullOrEmpty(result.RawResult))
             {
-                var token = result.AccessToken;
-                OnLoginSuccess(token.UserId, token.TokenString, result.AuthenticationToken.TokenString);
+//                var token = result.AccessToken;
+//                OnLoginSuccess(token.UserId, token.TokenString, result.AuthenticationToken.TokenString);
+                OnLoginSuccess(result.RawResult);
             }
             else
             {
-                OnLoginFail("No Response");
+                OnLoginFail(PluginConstants.FailDefaultCode, "No Response");
             }
         }
         
         private void OnGameRestartLogout()
         {
+            LogoutInternal();
+        }
+
+        private void LogoutInternal()
+        {
             if (FB.IsLoggedIn)
                 FB.LogOut();
+
+            _loginData = null;
         }
     }
 }

@@ -60,14 +60,6 @@ namespace PluginSet.Facebook.Editor
 #elif UNITY_IOS
             context.AddLinkAssembly("Facebook.Unity.IOS");
 #endif
-        }
-        
-        [OnSyncExportSetting]
-        public static void OnSyncExportSetting(BuildProcessorContext context)
-        {
-            var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
-            if (!buildParams.Enable)
-                return;
 
             var pluginConfig = context.Get<PluginSetConfig>("pluginsConfig");
             var config = pluginConfig.Get<PluginFacebookConfig>("Facebook");
@@ -81,7 +73,7 @@ namespace PluginSet.Facebook.Editor
             config.AuthResponse = buildParams.AuthResponse;
             config.JavascriptSDKLocale = buildParams.JavascriptSDKLocale;
         }
-
+        
         [iOSXCodeProjectModify]
         public static void OnIosXcodeProjectModify(BuildProcessorContext context, PBXProjectManager project)
         {
@@ -203,13 +195,14 @@ namespace PluginSet.Facebook.Editor
 #endif
         }
 
-        [AndroidManifestModify]
-        public static void AndroidManifestModify(BuildProcessorContext context, XmlDocument doc)
+        [AndroidProjectModify]
+        public static void OnAndroidProjectModify(BuildProcessorContext context, AndroidProjectManager projectManager)
         {
             var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
             if (!buildParams.Enable)
                 return;
 
+            var doc = projectManager.LauncherManifest;
             doc.SetMetaData("com.facebook.sdk.ApplicationId", $"fb{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
             doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");

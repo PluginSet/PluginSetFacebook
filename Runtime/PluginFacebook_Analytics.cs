@@ -22,7 +22,7 @@ namespace PluginSet.Facebook
 
         public void CustomEvent(string customEventName, Dictionary<string, object> eventData = null)
         {
-            if (!_inited)
+            if (!IsEnableLogin)
             {
                 _missingEvents.Add(new MissingEvent
                 {
@@ -44,9 +44,10 @@ namespace PluginSet.Facebook
             }
             _missingEvents.Clear();
             
-            //AddEventListener(PluginConstants.NOTIFY_PAY_SUCCESS, OnPaymentSuccess);
+//            AddEventListener(PluginConstants.NOTIFY_PAY_SUCCESS, OnPaymentSuccess);
         }
 
+#if false
         private void OnPaymentSuccess(PluginsEventContext context)
         {
             var data = JsonUtility.FromJson<PaymentData>((string)context.Data);
@@ -59,6 +60,7 @@ namespace PluginSet.Facebook
                 {"transaction_id", data.transactionId},
             });
         }
+#endif
     }
 }
 #endif
