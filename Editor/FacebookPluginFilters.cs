@@ -18,17 +18,6 @@ namespace PluginSet.Facebook.Editor
             return !buildParams.Enable;
         }
         
-        private static bool FilterGameRoom(string s, BuildProcessorContext context)
-        {
-            var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
-            if (!buildParams.Enable)
-            {
-                Debug.Log("Filter lib file :::::::  " + s);
-            }
-                
-            return !buildParams.Enable || !buildParams.EnableGameRoom;
-        }
-        
         static FacebookPluginFilters()
         {
             PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins", FilterPlugins);
@@ -37,7 +26,9 @@ namespace PluginSet.Facebook.Editor
             PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/iOS", FilterPlugins);
             PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Canvas", FilterPlugins);
             PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Settings", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Gameroom", FilterGameRoom);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows", FilterPlugins);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows/x86", FilterPlugins);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows/x64", FilterPlugins);
         }
     }
 }

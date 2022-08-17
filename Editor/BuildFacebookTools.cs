@@ -206,6 +206,13 @@ namespace PluginSet.Facebook.Editor
             doc.SetMetaData("com.facebook.sdk.ApplicationId", $"fb{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
             doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
+
+            var activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityLoginActivity");
+            activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
+
+            var application = projectManager.LibraryManifest.findFirstElement(AndroidConst.META_DATA_PARENT);
+            application.RemoveAttribute("label", AndroidConst.NS_URI);
+            application.RemoveAttribute("icon", AndroidConst.NS_URI);
         }
 
     }

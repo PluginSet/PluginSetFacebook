@@ -25,10 +25,6 @@ namespace PluginSet.Facebook.Editor
         [Tooltip("是否启用Facebook分享")]
         [VisibleCaseBoolValue("Enable", true)]
         public bool EnableShare;
-        
-        [Tooltip("是否启用Facebook GameRoom")]
-        [VisibleCaseBoolValue("Enable", true)]
-        public bool EnableGameRoom;
 
         [Tooltip("Facebook提供的AppId")]
         public string AppId;
