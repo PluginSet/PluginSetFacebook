@@ -20,9 +20,33 @@ namespace PluginSet.Facebook
                 , delegate(IShareResult result)
                 {
                     if (result != null && !result.Cancelled && string.IsNullOrEmpty(result.Error))
-                        success?.Invoke();
+                    {
+                        if (success != null)
+                        {
+                            try
+                            {
+                                success.Invoke();
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error($"Share callback success error:{e.Message}:{e}");
+                            }
+                        }
+                    }
                     else
-                        fail?.Invoke();
+                    {
+                        if (fail != null)
+                        {
+                            try
+                            {
+                                fail.Invoke();
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error($"Share callback fail error:{e.Message}:{e}");
+                            }
+                        }
+                    }
                 });
         }
     }

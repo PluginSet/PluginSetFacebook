@@ -51,7 +51,14 @@ namespace PluginSet.Facebook
             result.PluginName = Name;
             foreach (var callback in _loginCallbacks)
             {
-                callback.Invoke(result);
+                try
+                {
+                    callback.Invoke(result);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Login result callback error:{e.Message}:{e}");
+                }
             }
             _loginCallbacks.Clear();
         }

@@ -77,8 +77,16 @@ namespace PluginSet.Facebook
                         payResult.Code = PluginConstants.FailDefaultCode;
                         payResult.Error = "No response";
                     }
-                    callback.Invoke(payResult);
-            });
+
+                    try
+                    {
+                        callback.Invoke(payResult);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error($"Pay callback error:{e.Message}:{e}");
+                    }
+                });
         }
     }
 }
