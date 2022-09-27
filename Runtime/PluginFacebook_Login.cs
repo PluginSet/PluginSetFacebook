@@ -8,11 +8,6 @@ namespace PluginSet.Facebook
 {
     public partial class PluginFacebook: ILoginPlugin
     {
-        private readonly List<string> LoginPermissions = new List<string>
-        {
-            "publish_actions"
-        };
-
         private readonly List<Action<Result>> _loginCallbacks = new List<Action<Result>>();
 
         public bool IsEnableLogin => _inited;
@@ -25,8 +20,8 @@ namespace PluginSet.Facebook
         {
             if (callback != null)
                 _loginCallbacks.Add(callback);
-            
-            FB.LogInWithPublishPermissions(LoginPermissions, OnFacebookLoginResult);
+
+            FB.LogInWithReadPermissions(_config.LoginPermissions, OnFacebookLoginResult) ;
         }
 
         public void Logout(Action<Result> callback = null)
