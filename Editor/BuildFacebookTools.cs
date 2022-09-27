@@ -203,9 +203,13 @@ namespace PluginSet.Facebook.Editor
                 return;
 
             var doc = projectManager.LauncherManifest;
-            doc.SetMetaData("com.facebook.sdk.ApplicationId", $"fb{buildParams.AppId}");
-            doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
+            doc.SetMetaData("com.facebook.sdk.ApplicationId", $"{buildParams.AppId}");
+            doc.SetMetaData("com.facebook.sdk.ClientToken", $"{buildParams.ClientToken}");
+            
             doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
+            
+            if (buildParams.EnableAnalytics)
+                doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
 
             var activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityLoginActivity");
             activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
