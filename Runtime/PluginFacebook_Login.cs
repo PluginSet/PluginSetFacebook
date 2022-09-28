@@ -21,7 +21,12 @@ namespace PluginSet.Facebook
             if (callback != null)
                 _loginCallbacks.Add(callback);
 
-            FB.LogInWithReadPermissions(_config.LoginPermissions, OnFacebookLoginResult) ;
+            
+#if UNITY_IOS
+            FB.Mobile.LoginWithTrackingPreference(LoginTracking.ENABLED, _config.LoginPermissions, "classic_nonce123", OnFacebookLoginResult);
+#else
+            FB.LogInWithReadPermissions(_config.LoginPermissions, OnFacebookLoginResult);
+#endif
         }
 
         public void Logout(Action<Result> callback = null)
