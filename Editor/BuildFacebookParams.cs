@@ -54,6 +54,6 @@ namespace PluginSet.Facebook.Editor
         public string JavascriptSDKLocale = "en_US";
 
         [Tooltip("Facebook登录时的授权请求")]
-        public string[] LoginPermissions = new[] { "public_profile", "email" };
+        public string[] LoginPermissions;
     }
 }

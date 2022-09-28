@@ -72,6 +72,7 @@ namespace PluginSet.Facebook.Editor
             config.FrictionlessRequests = buildParams.FrictionlessRequests;
             config.AuthResponse = buildParams.AuthResponse;
             config.JavascriptSDKLocale = buildParams.JavascriptSDKLocale;
+            config.LoginPermissions = buildParams.LoginPermissions;
         }
         
         [iOSXCodeProjectModify]
@@ -203,7 +204,7 @@ namespace PluginSet.Facebook.Editor
                 return;
 
             var doc = projectManager.LauncherManifest;
-            doc.SetMetaData("com.facebook.sdk.ApplicationId", $"{buildParams.AppId}");
+            doc.SetMetaData("com.facebook.sdk.ApplicationId", $"\\u003{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.ClientToken", $"{buildParams.ClientToken}");
             
             doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");

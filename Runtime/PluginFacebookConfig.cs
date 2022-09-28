@@ -23,7 +23,7 @@ namespace PluginSet.Facebook
         public string AuthResponse;
 
         public string JavascriptSDKLocale = "en_US";
-        
-        public string[] LoginPermissions = new[] { "public_profile", "email" };
+
+        public string[] LoginPermissions;
     }
 }
