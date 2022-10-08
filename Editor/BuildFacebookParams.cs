@@ -53,6 +53,9 @@ namespace PluginSet.Facebook.Editor
         [Tooltip("Facebook 参数：？")]
         public string JavascriptSDKLocale = "en_US";
 
+        [Tooltip("是否使用受限的登录方式，以通过服务器验证登录")]
+        public bool UseLimitedLogin = true;
+
         [Tooltip("Facebook登录时的授权请求")]
         public string[] LoginPermissions;
     }

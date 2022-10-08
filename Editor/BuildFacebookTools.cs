@@ -42,6 +42,8 @@ namespace PluginSet.Facebook.Editor
             if (buildParams.EnableLogin)
             {
                 context.Symbols.Add("ENABLE_FACEBOOK_LOGIN");
+                if (buildParams.UseLimitedLogin)
+                    context.Symbols.Add("FACEBOOK_LOGIN_LIMITED");
             }
 
             if (buildParams.EnableShare)
