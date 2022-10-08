@@ -204,12 +204,18 @@ namespace PluginSet.Facebook.Editor
             var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
             if (!buildParams.Enable)
                 return;
-
+            
             var doc = projectManager.LauncherManifest;
             doc.SetMetaData("com.facebook.sdk.ApplicationId", $"\\u003{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.ClientToken", $"{buildParams.ClientToken}");
             
             doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
+            
+            if (PlayerSettings.Android.targetSdkVersion == AndroidSdkVersions.AndroidApiLevelAuto
+                || PlayerSettings.Android.targetSdkVersion.CompareTo(AndroidSdkVersions.AndroidApiLevel28) >= 0)
+            {
+                doc.addQueries("com.facebook.katana");
+            }
             
             if (buildParams.EnableAnalytics)
                 doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
