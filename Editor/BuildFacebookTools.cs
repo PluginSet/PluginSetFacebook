@@ -225,6 +225,9 @@ namespace PluginSet.Facebook.Editor
             
             activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityDialogActivity");
             activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
+            
+            activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityDialogsActivity");
+            activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
 
             var application = projectManager.LibraryManifest.findFirstElement(AndroidConst.META_DATA_PARENT);
             application.RemoveAttribute("label", AndroidConst.NS_URI);
