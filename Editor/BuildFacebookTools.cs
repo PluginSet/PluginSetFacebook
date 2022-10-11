@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml;
 using PluginSet.Core;
 using PluginSet.Core.Editor;
@@ -223,11 +224,12 @@ namespace PluginSet.Facebook.Editor
             var activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityLoginActivity");
             activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
             
-            activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityDialogActivity");
-            activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
-            
             activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityDialogsActivity");
             activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
+            
+            var provider = doc.FindOrAddProvider("com.facebook.FacebookContentProvider");
+            provider.SetAttribute("authorities", $"com.facebook.app.FacebookContentProvider{buildParams.AppId}");
+            provider.SetAttribute("exported", "true");
 
             var application = projectManager.LibraryManifest.findFirstElement(AndroidConst.META_DATA_PARENT);
             application.RemoveAttribute("label", AndroidConst.NS_URI);
