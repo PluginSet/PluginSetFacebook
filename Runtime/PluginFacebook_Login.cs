@@ -22,14 +22,14 @@ namespace PluginSet.Facebook
                 _loginCallbacks.Add(callback);
 
             
+#if UNITY_IOS
 #if FACEBOOK_LOGIN_LIMITED
             FB.Mobile.LoginWithTrackingPreference(LoginTracking.LIMITED, _config.LoginPermissions, "limited_nonce123", OnFacebookLoginResult);
 #else
-#if UNITY_IOS
             FB.Mobile.LoginWithTrackingPreference(LoginTracking.ENABLED, _config.LoginPermissions, "classic_nonce123", OnFacebookLoginResult);
+#endif
 #else
             FB.LogInWithReadPermissions(_config.LoginPermissions, OnFacebookLoginResult);
-#endif
 #endif
         }
 
