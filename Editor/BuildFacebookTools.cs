@@ -228,8 +228,8 @@ namespace PluginSet.Facebook.Editor
             activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
             
             var provider = doc.FindOrAddProvider("com.facebook.FacebookContentProvider");
-            provider.SetAttribute("authorities", $"com.facebook.app.FacebookContentProvider{buildParams.AppId}");
-            provider.SetAttribute("exported", "true");
+            provider.SetAttribute("authorities", AndroidConst.NS_URI, $"com.facebook.app.FacebookContentProvider{buildParams.AppId}");
+            provider.SetAttribute("exported", AndroidConst.NS_URI, "true");
 
             var application = projectManager.LibraryManifest.findFirstElement(AndroidConst.META_DATA_PARENT);
             application.RemoveAttribute("label", AndroidConst.NS_URI);
