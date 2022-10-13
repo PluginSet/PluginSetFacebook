@@ -207,7 +207,7 @@ namespace PluginSet.Facebook.Editor
                 return;
             
             var doc = projectManager.LauncherManifest;
-            doc.SetMetaData("com.facebook.sdk.ApplicationId", $"\\u003{buildParams.AppId}");
+            doc.SetMetaData("com.facebook.sdk.ApplicationId", $"fb{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.ClientToken", $"{buildParams.ClientToken}");
             
             doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
@@ -221,11 +221,28 @@ namespace PluginSet.Facebook.Editor
             if (buildParams.EnableAnalytics)
                 doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
 
+            var configChanges = "fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen";
+            var theme = "@android:style/Theme.Translucent.NoTitleBar.Fullscreen";
+            
             var activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityLoginActivity");
-            activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
+            activity.SetAttribute("configChanges", AndroidConst.NS_URI, configChanges);
+            activity.SetAttribute("theme", AndroidConst.NS_URI, theme);
             
             activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityDialogsActivity");
-            activity.SetAttribute("configChanges", AndroidConst.NS_URI, "keyboardHidden|orientation");
+            activity.SetAttribute("configChanges", AndroidConst.NS_URI, configChanges);
+            activity.SetAttribute("theme", AndroidConst.NS_URI, theme);
+            
+            activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityGamingServicesFriendFinderActivity");
+            activity.SetAttribute("configChanges", AndroidConst.NS_URI, configChanges);
+            activity.SetAttribute("theme", AndroidConst.NS_URI, theme);
+            
+            activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityAppLinkActivity");
+            activity.SetAttribute("exported", AndroidConst.NS_URI, "true");
+            
+            activity = doc.FindOrAddActivity("com.facebook.unity.FBUnityDeepLinkingActivity");
+            activity.SetAttribute("exported", AndroidConst.NS_URI, "true");
+            
+            doc.FindOrAddActivity("com.facebook.unity.FBUnityGameRequestActivity");
             
             var provider = doc.FindOrAddProvider("com.facebook.FacebookContentProvider");
             provider.SetAttribute("authorities", AndroidConst.NS_URI, $"com.facebook.app.FacebookContentProvider{buildParams.AppId}");
