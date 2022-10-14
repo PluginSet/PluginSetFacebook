@@ -86,112 +86,23 @@ namespace PluginSet.Facebook.Editor
                 return;
 
             var plist = project.PlistDocument;
+            plist.AddXcodeURLType("facebook", "Editor", $"fb{buildParams.AppId}");
             plist.SetPlistValue("FacebookAppID", buildParams.AppId);
+            plist.SetPlistValue("FacebookClientToken", buildParams.ClientToken);
             plist.SetPlistValue("FacebookDisplayName", PlayerSettings.productName);
             plist.SetPlistValue("FacebookAutoLogAppEventsEnabled", true);
             plist.SetPlistValue("FacebookAdvertiserIDCollectionEnabled", true);
 
-            // ------ 添加fb的LSApplicationQueriesSchemes
-            Dictionary<string, bool> plistElementArray = new Dictionary<string, bool>();
-            plistElementArray.Add("fbapi", true);
-            plistElementArray.Add("fbauth", true);
-            plistElementArray.Add("fbauth2", true);
-            plistElementArray.Add("fbshareextension", true);
-
-            PlistElement lsApplicationQueriesSchemes;
-            plist.root.values.TryGetValue("LSApplicationQueriesSchemes", out lsApplicationQueriesSchemes);
-
-            //如果infoPlist里面有LSApplicationQueriesSchemes 就先取出来
-            if (lsApplicationQueriesSchemes != null &&
-                lsApplicationQueriesSchemes.GetType() == typeof(PlistElementArray))
-            {
-                var plistElementDictionaries = lsApplicationQueriesSchemes.AsArray().values
-                    .Where(plistElement => plistElement.GetType() == typeof(PlistElementArray));
-                foreach (var plistElement in plistElementDictionaries)
-                {
-                    PlistElement existingId;
-                    var elementArray = plistElement.AsArray().values;
-                    for (int i = 0; i < elementArray.Count; i++)
-                    {
-                        existingId = elementArray[i];
-                        if (existingId == null || existingId.GetType() != typeof(PlistElementString) ||
-                            string.IsNullOrEmpty(existingId.AsString())) continue;
-                        //去重
-                        if (!plistElementArray.ContainsKey((existingId.AsString())))
-                            plistElementArray.Add(existingId.AsString(), true);
-                    }
-                }
-            }
-            else
-            {
-                //如果没有就创建一个新的
-                lsApplicationQueriesSchemes = plist.root.CreateArray("LSApplicationQueriesSchemes");
-            }
-
-            foreach (string key in plistElementArray.Keys)
-            {
-                //增加LSApplicationQueriesSchemes的字段
-                lsApplicationQueriesSchemes.AsArray().AddString(key);
-            }
-            //-------end
-
-            //-------添加fb的CFBundleURLTypes
-            List<PlistElementDict> _tempCf = new List<PlistElementDict>();
-            PlistElementDict fbDict = new PlistElementDict();
-            PlistElementArray fbId = fbDict.CreateArray("CFBundleURLSchemes");
-            fbId.AddString($"fb{buildParams.AppId}");
-            _tempCf.Add(fbDict);
-
-            PlistElement cfBundleURLTypes;
-            plist.root.values.TryGetValue("CFBundleURLTypes", out cfBundleURLTypes);
-            //如果infoPlist里面有CFBundleURLTypes 就先取出来
-            if (cfBundleURLTypes != null && cfBundleURLTypes.GetType() == typeof(PlistElementArray))
-            {
-                var plistElementDictionaries = cfBundleURLTypes.AsArray().values
-                    .Where(plistElement => plistElement.GetType() == typeof(PlistElementArray));
-                foreach (var plistElement in plistElementDictionaries)
-                {
-                    _tempCf.Add(plistElement.AsDict());
-                }
-            }
-            else
-            {
-                //如果没有就创建一个新的
-                cfBundleURLTypes = plist.root.CreateArray("CFBundleURLTypes");
-            }
-
-            for (int i = 0; i < _tempCf.Count; i++)
-            {
-                var _addDict = cfBundleURLTypes.AsArray().AddDict();
-                if (_tempCf[i].AsDict().values.ContainsKey("CFBundleTypeRole"))
-                {
-                    _addDict.SetString("CFBundleTypeRole", _tempCf[i].AsDict().values["CFBundleTypeRole"].AsString());
-                }
-
-                if (_tempCf[i].AsDict().values.ContainsKey("CFBundleURLName"))
-                {
-                    _addDict.SetString("CFBundleURLName", _tempCf[i].AsDict().values["CFBundleURLName"].AsString());
-                }
-
-                if (_tempCf[i].AsDict().values.ContainsKey("CFBundleURLSchemes"))
-                {
-                    var _tempAr = _tempCf[i].AsDict().values["CFBundleURLSchemes"].AsArray();
-                    var _newAr = _addDict.CreateArray("CFBundleURLSchemes");
-                    for (int j = 0; j < _tempAr.values.Count; j++)
-                    {
-                        _newAr.AddString(_tempAr.values[j].AsString());
-                    }
-                }
-            }
-            //-------end
-
-
+            plist.AddApplicationQueriesSchemes("fbapi");
+            plist.AddApplicationQueriesSchemes("fb-messenger-share-api");
+            
             var pbxProject = project.Project;
 #if UNITY_2019_3_OR_NEWER
 			string xcodeTarget = pbxProject.GetUnityFrameworkTargetGuid();
 #else
 			string xcodeTarget = pbxProject.TargetGuidByName("Unity-iPhone");
 #endif
+            pbxProject.AddCapability(project.MainFramework, PBXCapabilityType.KeychainSharing);
 
 #if UNITY_IOS
             var projectPath = context.Get<string>("projectPath");
