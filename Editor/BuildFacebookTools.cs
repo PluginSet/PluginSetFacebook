@@ -102,7 +102,7 @@ namespace PluginSet.Facebook.Editor
 #else
 			string xcodeTarget = pbxProject.TargetGuidByName("Unity-iPhone");
 #endif
-            pbxProject.AddCapability(project.MainFramework, PBXCapabilityType.KeychainSharing);
+            project.TryAddCapability(project.MainFramework, PBXCapabilityType.KeychainSharing);
 
 #if UNITY_IOS
             var projectPath = context.Get<string>("projectPath");
