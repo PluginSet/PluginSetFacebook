@@ -41,6 +41,12 @@ namespace PluginSet.Facebook.Editor
         [Tooltip("Facebook 参数：？")]
         public bool EnableStatus = true;
 
+        [Tooltip("启用自动数据收集，未使用Analytics也能生效")]
+        public bool EnableAutoLogAppEvents = true;
+
+        [Tooltip("启用广告ID收集")]
+        public bool EnableAdvertiserIDCollection = true;
+
         [Tooltip("Facebook 参数：？")]
         public bool Xfbml = false;
 

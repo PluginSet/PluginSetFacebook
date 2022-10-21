@@ -90,8 +90,10 @@ namespace PluginSet.Facebook.Editor
             plist.SetPlistValue("FacebookAppID", buildParams.AppId);
             plist.SetPlistValue("FacebookClientToken", buildParams.ClientToken);
             plist.SetPlistValue("FacebookDisplayName", PlayerSettings.productName);
-            plist.SetPlistValue("FacebookAutoLogAppEventsEnabled", true);
-            plist.SetPlistValue("FacebookAdvertiserIDCollectionEnabled", true);
+            if (buildParams.EnableAutoLogAppEvents)
+                plist.SetPlistValue("FacebookAutoLogAppEventsEnabled", true);
+            if (buildParams.EnableAdvertiserIDCollection)
+                plist.SetPlistValue("FacebookAdvertiserIDCollectionEnabled", true);
 
             plist.AddApplicationQueriesSchemes("fbapi");
             plist.AddApplicationQueriesSchemes("fb-messenger-share-api");
@@ -120,17 +122,16 @@ namespace PluginSet.Facebook.Editor
             var doc = projectManager.LauncherManifest;
             doc.SetMetaData("com.facebook.sdk.ApplicationId", $"fb{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.ClientToken", $"{buildParams.ClientToken}");
-            
-            doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
+            if (buildParams.EnableAutoLogAppEvents)
+                doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
+            if (buildParams.EnableAdvertiserIDCollection)
+                doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
             
             if (PlayerSettings.Android.targetSdkVersion == AndroidSdkVersions.AndroidApiLevelAuto
                 || PlayerSettings.Android.targetSdkVersion.CompareTo(AndroidSdkVersions.AndroidApiLevel28) >= 0)
             {
                 doc.addQueries("com.facebook.katana");
             }
-            
-            if (buildParams.EnableAnalytics)
-                doc.SetMetaData("com.facebook.sdk.AutoLogAppEventsEnabled", "true");
 
             var configChanges = "fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen";
             var theme = "@android:style/Theme.Translucent.NoTitleBar.Fullscreen";
