@@ -33,6 +33,11 @@ namespace PluginSet.Facebook.Editor
                 throw new Exception($"Cannot find targetDepPath to {targetDepPath}");
             
             Global.CopyFileFromDirectory(dependenciesPath, targetDepPath, "FacebookDependencies.xml");
+
+            if (buildParams.ReportInstall)
+            {
+                context.Symbols.Add("ENABLE_FACEBOOK_REPORT_INSTALL");
+            }
             
             if (buildParams.EnablePayment)
             {

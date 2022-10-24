@@ -1,7 +1,11 @@
-﻿#if ENABLE_FACEBOOK
+﻿
+using System.Collections.Generic;
+using Logger = PluginSet.Core.Logger;
+#if ENABLE_FACEBOOK
 using System.Collections;
 using Facebook.Unity;
 using PluginSet.Core;
+using UnityEngine;
 
 namespace PluginSet.Facebook
 {
@@ -63,6 +67,18 @@ namespace PluginSet.Facebook
         private void OnInited()
         {
             _inited = true;
+
+#if ENABLE_FACEBOOK_REPORT_INSTALL
+            if (PlayerPrefs.GetInt("com.facebook.installed") != 1)
+            {
+                FB.LogAppEvent("fb_mobile_first_app_launch", 1, new Dictionary<string, object>
+                {
+                    { "fb_auto_published", false },
+                });
+                PlayerPrefs.SetInt("com.facebook.installed", 1);
+            }
+#endif
+            
             FB.ActivateApp();
 #if ENABLE_FACEBOOK_ANALYTICS
             OnAnalyticsInited();

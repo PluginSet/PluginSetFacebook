@@ -10,6 +10,10 @@ namespace PluginSet.Facebook.Editor
         [Tooltip("是否启用Facebook")]
         public bool Enable;
         
+        [Tooltip("是否手动上报安装事件")]
+        [VisibleCaseBoolValue("Enable", true)]
+        public bool ReportInstall;
+        
         [Tooltip("是否启用Facebook数据收集")]
         [VisibleCaseBoolValue("Enable", true)]
         public bool EnableAnalytics;
