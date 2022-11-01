@@ -132,8 +132,7 @@ namespace PluginSet.Facebook.Editor
             if (buildParams.EnableAdvertiserIDCollection)
                 doc.SetMetaData("com.facebook.sdk.AdvertiserIDCollectionEnabled", "true");
             
-            if (PlayerSettings.Android.targetSdkVersion == AndroidSdkVersions.AndroidApiLevelAuto
-                || PlayerSettings.Android.targetSdkVersion.CompareTo(AndroidSdkVersions.AndroidApiLevel28) >= 0)
+            if (projectManager.LauncherGradle.TargetSdkVersion >= 28)
             {
                 doc.addQueries("com.facebook.katana");
             }
