@@ -112,8 +112,7 @@ namespace PluginSet.Facebook.Editor
             project.TryAddCapability(project.MainFramework, PBXCapabilityType.KeychainSharing);
 
 #if UNITY_IOS
-            var projectPath = context.Get<string>("projectPath");
-            Global.EnableSwiftCompile(pbxProject, projectPath, xcodeTarget);
+            Global.EnableSwiftCompile(pbxProject, context.ProjectPath, xcodeTarget);
 #endif
         }
 
