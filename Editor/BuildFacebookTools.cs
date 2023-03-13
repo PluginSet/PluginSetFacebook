@@ -7,7 +7,6 @@ using System.Xml;
 using PluginSet.Core;
 using PluginSet.Core.Editor;
 using UnityEditor;
-using UnityEditor.iOS.Xcode;
 using UnityEngine;
 
 namespace PluginSet.Facebook.Editor
@@ -18,6 +17,9 @@ namespace PluginSet.Facebook.Editor
         [OnSyncEditorSetting]
         public static void OnSyncEditorSetting(BuildProcessorContext context)
         {
+            if (context.BuildTarget != BuildTarget.Android && context.BuildTarget != BuildTarget.iOS)
+                return;
+                
             var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
             if (!buildParams.Enable)
                 return;
@@ -103,17 +105,8 @@ namespace PluginSet.Facebook.Editor
             plist.AddApplicationQueriesSchemes("fbapi");
             plist.AddApplicationQueriesSchemes("fb-messenger-share-api");
             
-            var pbxProject = project.Project;
-#if UNITY_2019_3_OR_NEWER
-			string xcodeTarget = pbxProject.GetUnityFrameworkTargetGuid();
-#else
-			string xcodeTarget = pbxProject.TargetGuidByName("Unity-iPhone");
-#endif
             project.TryAddCapability(project.MainFramework, PBXCapabilityType.KeychainSharing);
-
-#if UNITY_IOS
-            Global.EnableSwiftCompile(pbxProject, context.ProjectPath, xcodeTarget);
-#endif
+            project.EnableSwiftCompile(project.UnityFramework);
         }
 
         [AndroidProjectModify]

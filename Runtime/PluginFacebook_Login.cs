@@ -16,7 +16,7 @@ namespace PluginSet.Facebook
 
         private string _loginData = null;
         
-        public void Login(Action<Result> callback = null)
+        public void Login(Action<Result> callback = null, string _ = null)
         {
             if (callback != null)
                 _loginCallbacks.Add(callback);
@@ -33,7 +33,7 @@ namespace PluginSet.Facebook
 #endif
         }
 
-        public void Logout(Action<Result> callback = null)
+        public void Logout(Action<Result> callback = null, string _ = null)
         {
             LogoutInternal();
             

@@ -5,6 +5,8 @@ using UnityEngine;
 namespace PluginSet.Facebook.Editor
 {
     [BuildChannelsParams("Facebook", "Facebook应用设置")]
+    [VisibleCaseBoolValue("SupportAndroid", true)]
+    [VisibleCaseBoolValue("SupportIOS", true)]
     public class BuildFacebookParams: ScriptableObject
     {
         [Tooltip("是否启用Facebook")]
