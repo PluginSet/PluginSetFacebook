@@ -20,7 +20,7 @@ namespace PluginSet.Facebook.Editor
             if (context.BuildTarget != BuildTarget.Android && context.BuildTarget != BuildTarget.iOS)
                 return;
                 
-            var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
+            var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
             if (!buildParams.Enable)
                 return;
             
@@ -72,7 +72,7 @@ namespace PluginSet.Facebook.Editor
 #endif
 
             var pluginConfig = context.Get<PluginSetConfig>("pluginsConfig");
-            var config = pluginConfig.Get<PluginFacebookConfig>("Facebook");
+            var config = pluginConfig.AddConfig<PluginFacebookConfig>("Facebook");
             config.AppId = buildParams.AppId;
             config.ClientToken = buildParams.ClientToken;
             config.EnableCookie = buildParams.EnableCookie;
@@ -88,7 +88,7 @@ namespace PluginSet.Facebook.Editor
         [iOSXCodeProjectModify]
         public static void OnIosXcodeProjectModify(BuildProcessorContext context, PBXProjectManager project)
         {
-            var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
+            var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
             if (!buildParams.Enable)
                 return;
 
@@ -112,7 +112,7 @@ namespace PluginSet.Facebook.Editor
         [AndroidProjectModify]
         public static void OnAndroidProjectModify(BuildProcessorContext context, AndroidProjectManager projectManager)
         {
-            var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
+            var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
             if (!buildParams.Enable)
                 return;
             

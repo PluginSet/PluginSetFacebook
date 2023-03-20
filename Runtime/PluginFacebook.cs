@@ -32,7 +32,7 @@ namespace PluginSet.Facebook
         
         protected override void Init(PluginSetConfig config)
         {
-            _config = config.Get<PluginFacebookConfig>("Facebook");
+            _config = config.Get<PluginFacebookConfig>();
         }
 
         public IEnumerator StartPlugin()

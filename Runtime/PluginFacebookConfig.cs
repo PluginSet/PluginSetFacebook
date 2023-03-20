@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace PluginSet.Facebook
 {
-    [PluginSetConfig("Facebook")]
     public class PluginFacebookConfig: ScriptableObject
     {
         public string AppId;

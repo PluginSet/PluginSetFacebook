@@ -9,7 +9,7 @@ namespace PluginSet.Facebook.Editor
     {
         private static bool FilterPlugins(string s, BuildProcessorContext context)
         {
-            var buildParams = context.BuildChannels.Get<BuildFacebookParams>("Facebook");
+            var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
             if (!buildParams.Enable)
             {
                 Debug.Log("Filter lib file :::::::  " + s);
