@@ -8,6 +8,8 @@ namespace PluginSet.Facebook
         public string AppId;
         
         public string ClientToken;
+        
+        public bool AutoReportInstall = false;
 
         public bool EnableCookie = true;
 

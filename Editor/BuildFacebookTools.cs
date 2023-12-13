@@ -35,11 +35,6 @@ namespace PluginSet.Facebook.Editor
                 throw new Exception($"Cannot find targetDepPath to {targetDepPath}");
             
             Global.CopyFileFromDirectory(dependenciesPath, targetDepPath, "FacebookDependencies.xml");
-
-            if (buildParams.ReportInstall)
-            {
-                context.Symbols.Add("ENABLE_FACEBOOK_REPORT_INSTALL");
-            }
             
             if (buildParams.EnablePayment)
             {
@@ -74,6 +69,7 @@ namespace PluginSet.Facebook.Editor
             var pluginConfig = context.Get<PluginSetConfig>("pluginsConfig");
             var config = pluginConfig.AddConfig<PluginFacebookConfig>("Facebook");
             config.AppId = buildParams.AppId;
+            config.AutoReportInstall = buildParams.ReportInstall;
             config.ClientToken = buildParams.ClientToken;
             config.EnableCookie = buildParams.EnableCookie;
             config.EnableLogging = buildParams.EnableLogging;
@@ -116,7 +112,7 @@ namespace PluginSet.Facebook.Editor
             if (!buildParams.Enable)
                 return;
             
-            var doc = projectManager.LauncherManifest;
+            var doc = projectManager.LibraryManifest;
             doc.SetMetaData("com.facebook.sdk.ApplicationId", $"fb{buildParams.AppId}");
             doc.SetMetaData("com.facebook.sdk.ClientToken", $"{buildParams.ClientToken}");
             if (buildParams.EnableAutoLogAppEvents)
@@ -127,6 +123,15 @@ namespace PluginSet.Facebook.Editor
             if (projectManager.LauncherGradle.TargetSdkVersion >= 28)
             {
                 doc.addQueries("com.facebook.katana");
+
+                doc.findOrCreateElemet(AndroidConst.ROOT_NAME)
+                    .SetAttribute("package", context.BuildChannels.PackageName);
+
+                var node1 = doc.createElementWithPath("/manifest/queries/provider");
+                node1.SetAttribute("authorities", AndroidConst.NS_URI, "com.facebook.katana.provider.PlatformProvider");
+                
+                var node2 = doc.createElementWithPath("/manifest/queries/provider");
+                node2.SetAttribute("authorities", AndroidConst.NS_URI, "com.facebook.orca.provider.PlatformProvider");
             }
 
             var configChanges = "fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen";

@@ -15,6 +15,15 @@ namespace PluginSet.Facebook
         public bool IsLoggedIn => !string.IsNullOrEmpty(_loginData);
 
         private string _loginData = null;
+
+        [FacebookDisposeExecutable]
+        private void OnPluginDispose(bool isAppQuit)
+        {
+            if (isAppQuit)
+                return;
+            
+            LogoutInternal();
+        }
         
         public void Login(Action<Result> callback = null, string _ = null)
         {
@@ -119,11 +128,6 @@ namespace PluginSet.Facebook
             {
                 OnLoginFail(PluginConstants.FailDefaultCode, "No Response");
             }
-        }
-        
-        private void OnGameRestartLogout()
-        {
-            LogoutInternal();
         }
 
         private void LogoutInternal()

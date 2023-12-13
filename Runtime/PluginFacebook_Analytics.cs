@@ -15,6 +15,27 @@ namespace PluginSet.Facebook
         }
 
         private readonly List<MissingEvent> _missingEvents = new List<MissingEvent>();
+
+        [FacebookInitedExecutable]
+        private void OnAnalyticsInited()
+        {
+            if (_config.AutoReportInstall && PlayerPrefs.GetInt("com.facebook.installed") != 1)
+            {
+                FB.LogAppEvent("fb_mobile_first_app_launch", 1, new Dictionary<string, object>
+                {
+                    { "fb_auto_published", false },
+                });
+            }
+            
+            FB.ActivateApp();
+            
+            foreach (var missingEvent in _missingEvents)
+            {
+                FB.LogAppEvent(missingEvent.name, 1, missingEvent.data);
+            }
+            _missingEvents.Clear();
+        }
+
         
         public void FlushUserInfo()
         {
@@ -22,7 +43,7 @@ namespace PluginSet.Facebook
 
         public void CustomEvent(string customEventName, Dictionary<string, object> eventData = null)
         {
-            if (!IsEnableLogin)
+            if (!_inited)
             {
                 _missingEvents.Add(new MissingEvent
                 {
@@ -36,31 +57,11 @@ namespace PluginSet.Facebook
             }
         }
 
-        private void OnAnalyticsInited()
+        private void OnApplicationPause(bool pauseStatus)
         {
-            foreach (var missingEvent in _missingEvents)
-            {
-                FB.LogAppEvent(missingEvent.name, 1, missingEvent.data);
-            }
-            _missingEvents.Clear();
-            
-//            AddEventListener(PluginConstants.NOTIFY_PAY_SUCCESS, OnPaymentSuccess);
+            if (!pauseStatus && FB.IsInitialized)
+                FB.ActivateApp();
         }
-
-#if false
-        private void OnPaymentSuccess(PluginsEventContext context)
-        {
-            var data = JsonUtility.FromJson<PaymentData>((string)context.Data);
-            Logger.Info($"PluginFacebook OnPurchaseSuccessEvent with {data.productId} {data.price} {data.currency} {data.transactionId} {data.extra}");
-
-            FB.LogPurchase((float)data.price, data.currency, new Dictionary<string, object>
-            {
-                {"product_id", data.productId},
-                {"payment_type",Devices.GetAppData("channel", "unknown")},
-                {"transaction_id", data.transactionId},
-            });
-        }
-#endif
     }
 }
 #endif

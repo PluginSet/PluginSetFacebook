@@ -12,7 +12,7 @@ namespace PluginSet.Facebook.Editor
         [Tooltip("是否启用Facebook")]
         public bool Enable;
         
-        [Tooltip("是否手动上报安装事件")]
+        [Tooltip("是否自动上报安装事件，选中时在应用启动时判断是否首次启动，首次启动时上报安装事件")]
         [VisibleCaseBoolValue("Enable", true)]
         public bool ReportInstall;
         
