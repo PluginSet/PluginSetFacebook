@@ -124,9 +124,6 @@ namespace PluginSet.Facebook.Editor
             {
                 doc.addQueries("com.facebook.katana");
 
-                doc.findOrCreateElemet(AndroidConst.ROOT_NAME)
-                    .SetAttribute("package", context.BuildChannels.PackageName);
-
                 var node1 = doc.createElementWithPath("/manifest/queries/provider");
                 node1.SetAttribute("authorities", AndroidConst.NS_URI, "com.facebook.katana.provider.PlatformProvider");
                 
