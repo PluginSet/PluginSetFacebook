@@ -16,6 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <SafariServices/SafariServices.h>
+#import <AuthenticationServices/AuthenticationServices.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 #import <Foundation/NSJSONSerialization.h>
 
@@ -647,6 +650,12 @@ extern "C" {
   {
     [FBSDKSettings.sharedSettings setAdvertiserTrackingEnabled:advertiserTrackingEnabled];
     return [FBSDKSettings.sharedSettings isAdvertiserTrackingEnabled];
+  }
+
+  BOOL IOSFBDomainErrorEnabled(BOOL domainErrorEnabled)
+  {
+    [FBSDKSettings.sharedSettings setIsDomainErrorEnabled:domainErrorEnabled];
+    return [FBSDKSettings.sharedSettings isDomainErrorEnabled];
   }
 
   char* IOSFBSdkVersion()

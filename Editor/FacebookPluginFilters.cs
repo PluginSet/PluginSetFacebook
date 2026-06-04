@@ -7,29 +7,50 @@ namespace PluginSet.Facebook.Editor
     [InitializeOnLoad]
     public static class FacebookPluginFilters
     {
-        private static bool FilterPlugins(string s, BuildProcessorContext context)
+        private static bool FilterWhenDisabled(string s, BuildProcessorContext context)
         {
             var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
             if (!buildParams.Enable)
-            {
                 Debug.Log("Filter lib file :::::::  " + s);
-            }
-                
+
             return !buildParams.Enable;
         }
-        
+
+        private static bool FilterCanvasPlugins(string s, BuildProcessorContext context)
+        {
+            var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
+            var enable = buildParams.Enable && buildParams.EnablePayment
+                && context.BuildTarget == BuildTarget.WebGL;
+            if (!enable)
+                Debug.Log("Filter lib file :::::::  " + s);
+
+            return !enable;
+        }
+
+        private static bool FilterGamingPlugins(string s, BuildProcessorContext context)
+        {
+            var buildParams = context.BuildChannels.Get<BuildFacebookParams>();
+            var enable = buildParams.Enable && buildParams.EnablePayment;
+            if (!enable)
+                Debug.Log("Filter lib file :::::::  " + s);
+
+            return !enable;
+        }
+
         static FacebookPluginFilters()
         {
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Android", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Android/libs", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/iOS", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/iOS/Swift", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Canvas", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Settings", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows/x86", FilterPlugins);
-            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows/x64", FilterPlugins);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Android", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Android/libs", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/iOS", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Settings", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows/x86", FilterWhenDisabled);
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Windows/x64", FilterWhenDisabled);
+
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/Canvas", FilterCanvasPlugins);
+
+            PluginFilter.RegisterFilter("com.pluginset.facebook/Plugins/iOS/Swift", FilterGamingPlugins);
         }
     }
 }

@@ -12,6 +12,18 @@ namespace PluginSet.Facebook
         public void ShareWebPage(string webUrl, Action success = null, Action fail = null, string title = null, string desc = null,
             string image = null)
         {
+            if (!_inited)
+            {
+                InvokeShareFail(fail);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(webUrl))
+            {
+                InvokeShareFail(fail);
+                return;
+            }
+
             Uri imageUri = null;
             if (!string.IsNullOrEmpty(image))
                 imageUri = new Uri(image);
@@ -48,6 +60,21 @@ namespace PluginSet.Facebook
                         }
                     }
                 });
+        }
+
+        private static void InvokeShareFail(Action fail)
+        {
+            if (fail == null)
+                return;
+
+            try
+            {
+                fail.Invoke();
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"Share callback fail error:{e.Message}:{e}");
+            }
         }
     }
 }

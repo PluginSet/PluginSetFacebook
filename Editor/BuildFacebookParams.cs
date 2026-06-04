@@ -24,7 +24,7 @@ namespace PluginSet.Facebook.Editor
         [VisibleCaseBoolValue("Enable", true)]
         public bool EnableLogin;
         
-        [Tooltip("是否启用Facebook支付")]
+        [Tooltip("是否启用 Facebook Gaming/支付相关能力（Friend Finder、Game Request 等；Android 的 gamingservices 库在启用 Facebook 时已随 Core 依赖打入）")]
         [VisibleCaseBoolValue("Enable", true)]
         public bool EnablePayment;
         
@@ -67,6 +67,9 @@ namespace PluginSet.Facebook.Editor
 
         [Tooltip("是否使用受限的登录方式，以通过服务器验证登录")]
         public bool UseLimitedLogin = true;
+
+        [Tooltip("iOS 登录 nonce，留空则运行时自动生成")]
+        public string LoginNonce;
 
         [Tooltip("Facebook登录时的授权请求")]
         public string[] LoginPermissions;

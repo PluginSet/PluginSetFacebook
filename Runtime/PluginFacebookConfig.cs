@@ -24,5 +24,7 @@ namespace PluginSet.Facebook
         public string JavascriptSDKLocale = "en_US";
 
         public string[] LoginPermissions;
+
+        public string LoginNonce;
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.facebook.android:facebook-gamingservices:[18.0.0,19)" />
+    </androidPackages>
+    <iosPods>
+        <iosPod name="FBSDKGamingServicesKit" version="~> 18.0.0" />
+    </iosPods>
+</dependencies>

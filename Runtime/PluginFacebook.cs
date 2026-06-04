@@ -40,6 +40,12 @@ namespace PluginSet.Facebook
             if (IsRunning)
                 yield break;
 
+            if (_config == null || string.IsNullOrEmpty(_config.AppId))
+            {
+                Logger.Error("Facebook AppId is not configured.");
+                yield break;
+            }
+
             FB.Init(
                 _config.AppId,
                 CheckString(_config.ClientToken),
@@ -66,7 +72,14 @@ namespace PluginSet.Facebook
         
         private void OnInited()
         {
+            if (!FB.IsInitialized)
+            {
+                Logger.Error("Facebook SDK init failed.");
+                return;
+            }
+
             _inited = true;
+            IsRunning = true;
 
 #if ENABLE_FACEBOOK_REPORT_INSTALL
             if (PlayerPrefs.GetInt("com.facebook.installed") != 1)

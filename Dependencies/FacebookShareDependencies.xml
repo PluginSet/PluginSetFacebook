@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+    <androidPackages>
+        <androidPackage spec="com.facebook.android:facebook-share:[18.0.0,19)" />
+    </androidPackages>
+    <iosPods>
+        <iosPod name="FBSDKShareKit" version="~> 18.0.0" />
+    </iosPods>
+</dependencies>
